@@ -10,5 +10,16 @@
 			"email": "jerome@tde.nl",
 			"homepage": "https://www.tde.nl"
 		}
-	]
+	],
+	"extra": {
+		"handle": "branding"
+	},
+	"require": {
+		"craftcms/cms": "^3.0.0-RC1"
+	},
+	"autoload": {
+		"psr-4": {
+			"tde\\branding\\": "src/"
+		}
+	}
 }

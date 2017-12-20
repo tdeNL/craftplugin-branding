@@ -1,68 +1,21 @@
 <?php
 
-namespace Craft;
+namespace tde\branding;
 
-/**
- * Class BrandingPlugin
- * @package Craft
- */
-class BrandingPlugin extends BasePlugin
+use Craft;
+use craft\base\Plugin;
+
+class BrandingPlugin extends Plugin
 {
 	const SITE_LOGO_NAME = 'site-logo.png';
-
-	/**
-	 * @return string
-	 */
-	public function getId()
-	{
-		return 'branding';
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getName()
-	{
-		return 'TDE - Branding';
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getDescription()
-	{
-		return 'Brand the Craft Control Panel with TDE.';
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getVersion()
-	{
-		return '1.0.0';
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getDeveloper()
-	{
-		return 'TDE';
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getDeveloperUrl()
-	{
-		return 'http://www.tde.nl';
-	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function init()
 	{
+		parent::init();
+
 		if (craft()->request->isCpRequest() && !craft()->userSession->isLoggedIn()) {
 			craft()->templates->includeCss('
 				body {
