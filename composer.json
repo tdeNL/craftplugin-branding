@@ -12,7 +12,14 @@
 		}
 	],
 	"extra": {
-		"handle": "branding"
+		"name": "TDE - Branding",
+		"handle": "branding",
+		"developer": "TDE",
+		"developerUrl": "http://www.tde.nl",
+		"schemaVersion": "1.0.0",
+		"hasCpSettings": false,
+		"hasCpSection": false,
+		"class": "tde\\branding\\BrandingPlugin"
 	},
 	"require": {
 		"craftcms/cms": "^3.0.0-RC1"
