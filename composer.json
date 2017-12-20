@@ -1,0 +1,13 @@
+{
+	"name": "tde/craftplugin-branding",
+	"type": "craft-plugin",
+	"description": "CraftCMS plugin to brand the website with TDE corporate identity.",
+	"homepage": "https://github.com/tdeNL/craftplugin-branding",
+	"authors": [
+		{
+			"name": "Jerome Anker",
+			"email": "jerome@tde.nl",
+			"homepage": "https://www.tde.nl",
+		}
+	]
+}
