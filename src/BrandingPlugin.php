@@ -2,24 +2,39 @@
 
 namespace tde\branding;
 
+use Composer\Util\Filesystem;
 use Craft;
 use craft\base\Plugin;
+use craft\helpers\FileHelper;
 
+/**
+ * Class BrandingPlugin
+ * @package tde\branding
+ */
 class BrandingPlugin extends Plugin
 {
 	const SITE_LOGO_NAME = 'site-logo.png';
+
+	/**
+	 * @return bool
+	 * @throws \craft\errors\ImageException
+	 * @throws \yii\base\ErrorException
+	 */
+	public function beforeInstall() : bool
+	{
+		return $this->saveSiteLogo();
+	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function init()
 	{
-		parent::init();
-
-		if (craft()->request->isCpRequest() && !craft()->userSession->isLoggedIn()) {
-			craft()->templates->includeCss('
-				body {
-					background-image: url('. UrlHelper::getResourceUrl($this->getId() . '/images/cp-bg.jpg') . ');
+		if (Craft::$app->request->isCpRequest && Craft::$app->user->isGuest) {
+			Craft::$app->view->registerAssetBundle(BrandingPluginAssets::class);
+			Craft::$app->view->registerCss('
+				body.login {
+					background-image: url(' . Craft::$app->assetManager->getPublishedUrl('@tde/branding/resources/cp-bg.jpg', true) . ');
 					-webkit-background-size: cover;
 					-moz-background-size: cover;
 					-o-background-size: cover;
@@ -33,45 +48,41 @@ class BrandingPlugin extends Plugin
 				}
 			');
 		}
-	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function onBeforeInstall()
-	{
-		if (!$this->saveSiteLogo()) {
-			return false;
-		}
-
-		return true;
+		parent::init();
 	}
 
 	/**
 	 * Save the site logo
 	 *
 	 * @return bool
+	 * @throws \yii\base\ErrorException
+	 * @throws \craft\errors\ImageException
 	 */
 	protected function saveSiteLogo()
 	{
-		$logoPath = craft()->path->getPluginsPath() . $this->getId() . '/resources/images/' . self::SITE_LOGO_NAME;
+		$logoPath = __DIR__ . '/resources/' . self::SITE_LOGO_NAME;
 
 		// check if site-logo exists
-		if (!IOHelper::fileExists($logoPath)) {
-			craft()->userSession->setNotice(
-				'Er is nog geen site logo in de plugin toegevoegd. Voeg deze toe in craft/plugins/' . $this->getId() .
+		if (!file_exists($logoPath)) {
+			Craft::$app->session->setNotice(
+				'Er is nog geen site logo in de plugin toegevoegd. Voeg deze toe de TDE Branding plugin-map: ' .
 				'/resources/images/' . self::SITE_LOGO_NAME
 			);
 
 			return false;
 		}
 
-		$targetPath = craft()->path->getRebrandPath() . 'logo/';
+		$targetPath = Craft::$app->path->getRebrandPath() . '/logo/';
+		if (!is_dir($targetPath)) {
+			mkdir($targetPath);
+		}
 
-		IOHelper::ensureFolderExists($targetPath);
-		IOHelper::clearFolder($targetPath);
+		$fs = new Filesystem();
+		$fs->ensureDirectoryExists($targetPath);
+		FileHelper::clearDirectory($targetPath);
 
-		craft()->images
+		Craft::$app->images
 			->loadImage($logoPath)
 			->scaleToFit(300, 300, false)
 			->saveAs($targetPath . self::SITE_LOGO_NAME);
