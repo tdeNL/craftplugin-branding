@@ -66,7 +66,7 @@ class BrandingPlugin extends Plugin
 		// check if site-logo exists
 		if (!file_exists($logoPath)) {
 			Craft::$app->session->setNotice(
-				'Er is nog geen site logo in de plugin toegevoegd. Voeg deze toe de TDE Branding plugin-map: ' .
+				'Er is nog geen site logo in de plugin toegevoegd. Voeg deze toe aan de TDE Branding plugin-map: ' .
 				'/resources/images/' . self::SITE_LOGO_NAME
 			);
 
