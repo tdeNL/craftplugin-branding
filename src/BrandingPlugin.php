@@ -28,7 +28,7 @@ class BrandingPlugin extends Plugin
 					-o-background-size: cover;
 					background-size: cover;
 					background-repeat: no-repeat;
-					background-position: right bottom;
+					background-position: top left;
 					color: #fff;
 				}
 				#poweredby {
