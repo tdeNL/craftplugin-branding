@@ -12,6 +12,21 @@ use craft\web\assets\feed\FeedAsset;
 class TdeRssFeed extends Widget
 {
     /**
+     * @var string The feed URL
+     */
+    public $url = 'https://www.tde.nl/feed.rss';
+
+    /**
+     * @var string The feed title
+     */
+    public $title = 'TDE nieuws';
+
+    /**
+     * @var int The maximum number of feed items to display
+     */
+    public $limit = 5;
+
+    /**
      * @return string
      */
     public static function displayName(): string
@@ -36,16 +51,33 @@ class TdeRssFeed extends Widget
      */
     public function getBodyHtml()
     {
-        $view = \Craft::$app->getView();
-        $view->registerAssetBundle(FeedAsset::class);
-        $view->registerJs(
-            "new Craft.FeedWidget({$this->id}, " .
-            Json::encode('https://www.tde.nl/feed.rss') . ', ' .
-            Json::encode(5) . ');'
-        );
+        // See if it's already cached
+        $data = \Craft::$app->getCache()->get("feed:$this->url");
+
+        if ($data) {
+            $data['items'] = array_slice($data['items'] ?? [], 0, $this->limit);
+        } else {
+            // Fake it for now and fetch it later
+            $data = [
+                'direction' => 'ltr',
+                'items' => [],
+            ];
+
+            for ($i = 0; $i < $this->limit; $i++) {
+                $data['items'][] = [];
+            }
+
+            $view = \Craft::$app->getView();
+            $view->registerAssetBundle(FeedAsset::class);
+            $view->registerJs(
+                "new Craft.FeedWidget({$this->id}, " .
+                Json::encode($this->url) . ', ' .
+                Json::encode($this->limit) . ');'
+            );
+        }
 
         return \Craft::$app->getView()->renderTemplate('_components/widgets/Feed/body', [
-            'limit' => 5,
+            'feed' => $data,
         ]);
     }
 }
