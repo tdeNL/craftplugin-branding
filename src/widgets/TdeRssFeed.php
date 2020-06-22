@@ -78,6 +78,7 @@ class TdeRssFeed extends Widget
 
         return \Craft::$app->getView()->renderTemplate('_components/widgets/Feed/body', [
             'feed' => $data,
+            'limit' => $this->limit,
         ]);
     }
 }
