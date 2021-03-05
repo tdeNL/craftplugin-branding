@@ -44,6 +44,14 @@ class BrandingPlugin extends Plugin
 		}
 
         if (!Craft::$app->user->isGuest) {
+            if (!Craft::$app->user->getIsAdmin()) {
+                Craft::$app->view->registerCss('
+                    #alerts {
+                        display: none;
+                    }
+                ');
+            }
+
             // Define branded widgets
             $widgets = [TdeRssFeed::class];
 
